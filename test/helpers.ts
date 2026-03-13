@@ -141,6 +141,23 @@ export function mockErrorResponse(
   );
 }
 
+/**
+ * Create a mock Response with a JSON body.
+ */
+export function mockJsonResponse(
+  body: unknown,
+  status = 200,
+  contentType = "application/json",
+): Response {
+  return new Response(
+    JSON.stringify(body),
+    {
+      status,
+      headers: { "Content-Type": contentType },
+    },
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Mock fetch
 // ---------------------------------------------------------------------------

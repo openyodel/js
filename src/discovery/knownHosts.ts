@@ -27,23 +27,45 @@ export interface KnownHost {
 /**
  * Parse and validate an array of known host entries.
  *
- * **Status: Stub.** Not implemented in v0.1.0.
- *
  * This is a pure function — it has no side effects and no dependency
  * on network or storage. Storage (localStorage, IndexedDB, file system)
  * is the caller's responsibility.
  *
+ * Fails fast on the first invalid entry (SDK Design Guide §10 Rule 5).
+ *
  * @param hosts - Raw known host entries to validate.
- * @returns Validated known hosts.
- * @throws {YodelError} Always — not implemented in v0.1.0.
+ * @returns Validated known hosts with normalized URLs.
+ * @throws {YodelError} On invalid entry (empty name, invalid URL).
  */
 export function parseKnownHosts(
-  _hosts: readonly KnownHost[],
+  hosts: readonly KnownHost[],
 ): readonly KnownHost[] {
-  // TODO: implement — validate URLs, deduplicate, return
-  throw new YodelError(
-    "parseKnownHosts() is not implemented in v0.1.0",
-    "backend_error",
-    0,
-  );
+  const result: KnownHost[] = [];
+
+  for (let i = 0; i < hosts.length; i++) {
+    const entry = hosts[i];
+
+    if (typeof entry.name !== "string" || entry.name.trim() === "") {
+      throw new YodelError(
+        `Invalid known host at index ${i}: name must be a non-empty string`,
+        "validation_error",
+        0,
+      );
+    }
+
+    let normalized: string;
+    try {
+      normalized = new URL(entry.url).href;
+    } catch {
+      throw new YodelError(
+        `Invalid known host at index ${i}: invalid URL "${entry.url}"`,
+        "validation_error",
+        0,
+      );
+    }
+
+    result.push({ name: entry.name, url: normalized });
+  }
+
+  return result;
 }
