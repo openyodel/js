@@ -41,7 +41,7 @@ export function chunk(
   content: string,
   opts?: {
     role?: string;
-    finishReason?: string | null;
+    finishReason?: "stop" | "length" | null;
     id?: string;
   },
 ): string {

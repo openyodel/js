@@ -89,8 +89,8 @@ export interface YodelStreamChunk {
   /** "assistant" on the first chunk only. */
   readonly role?: string;
 
-  /** "stop" | "length" | null */
-  readonly finishReason: string | null;
+  /** Reason the stream finished. Spec §7.1.1 */
+  readonly finishReason: "stop" | "length" | null;
 }
 
 /**
@@ -122,7 +122,7 @@ export interface RawChatCompletionChunk {
       readonly role?: string;
       readonly content?: string;
     };
-    readonly finish_reason: string | null;
+    readonly finish_reason: "stop" | "length" | null;
   }[];
 }
 

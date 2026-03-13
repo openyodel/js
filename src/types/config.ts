@@ -79,7 +79,8 @@ export type DeviceType =
   | "car"
   | "speaker"
   | "terminal"
-  | "embedded";
+  | "embedded"
+  | "agent_platform";
 
 /**
  * Device capability. Spec §6.4.3
